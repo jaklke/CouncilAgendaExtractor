@@ -20,7 +20,8 @@ def extraheer_zitting_data(url):
 
     soup = BeautifulSoup(html_content, 'html.parser')
     html_output = ""
-    
+    i = 3
+
     # Zoek hoofdtitel (negeer "terug" knoppen)
     hoofdtitels = soup.find_all(['h1', 'h2'])
     zitting_titel = "Zitting Gemeenteraad"
@@ -60,7 +61,8 @@ def extraheer_zitting_data(url):
             titel_tekst = titel_elem.get_text(strip=True)
             
             # Elk item wordt een Heading 2 in Confluence
-            html_output += f"<h3>{titel_tekst}</h3>\n"
+            html_output += f"<h3>{i}. {titel_tekst}</h3>\n"
+            i += 1
             
             # Zoek de summary container binnen dit lijstitem
             summary_div = punt.find('div', class_='summary')
@@ -71,6 +73,13 @@ def extraheer_zitting_data(url):
                 html_output += summary_div.decode_contents()
             else:
                 html_output += "<p><em>Geen publieke tekst of besluitvorming beschikbaar voor dit punt.</em></p>\n"
+
+            html_output += f"<h4>🧠 Voorbereiding</h4>\n"
+            html_output += f"<p>Geen voorbereiding beschikbaar.</p>\n"
+
+            html_output += f"<h4>🗣️ Bespreking tijdens vergadering</h4>\n"
+
+            html_output += f"<p><strong>Stemgedrag: </strong>bepalen</p>\n"
                 
             html_output += "\n\n"  # Ruimte tussen de punten
             
